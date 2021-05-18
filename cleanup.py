@@ -57,17 +57,52 @@ for x in directories:
 
 for filename in files:
     print(type(filename))
+    destPath = downloads
     if isAudio(filename):
-        shutil.move(os.path.join(downloads, filename), audio)
+        destPath = audio
     elif isDocument(filename):
-        shutil.move(os.path.join(downloads, filename), docs)
+        destPath = docs
     elif isImage(filename):
-        shutil.move(os.path.join(downloads, filename), images)
+        destPath = images
     elif isInstall(filename):
-        shutil.move(os.path.join(downloads, filename), install)
+        destPath = install
     elif isVideo(filename):
-        shutil.move(os.path.join(downloads, filename), videos)
+        destPath = videos
     elif (not isDirectory(filename)):
-        shutil.move(os.path.join(downloads, filename), misc)
+        destPath = misc
     else:
         continue
+    sourcePath = os.path.join(downloads, filename)
+    destPathComplete = destPath + "\\" + filename
+    print(destPathComplete)
+    if (os.path.exists(destPathComplete)):
+        try:
+            shutil.copy(sourcePath, destPath)
+            print("File copied successfully.")
+  
+        # If source and destination are same
+        except shutil.SameFileError:
+            print("Source and destination represents the same file.")
+  
+        # If there is any permission issue
+        except PermissionError:
+            print("Permission denied.")
+  
+        # For other errors
+        except:
+            print("Error occurred while copying file.")
+        os.remove(sourcePath)
+    else:
+        try: 
+            shutil.move(sourcePath, destPath)
+            print("File moved successfully")
+        # If source and destination are same
+        except shutil.SameFileError:
+            print("Source and destination represents the same file.")
+  
+        # If there is any permission issue
+        except PermissionError:
+            print("Permission denied.")
+        except:
+            print("Error occurred while moving file.")
+
